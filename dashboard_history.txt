@@ -1,0 +1,296 @@
+Created At: 2026-09-30T21:43:28+05:30
+Completed At: 2026-09-30T21:43:28+05:30
+File Path: `file:///home/shaktimaan/Documents/mrrs_billing/src/app/%28app%29/dashboard/page.tsx`
+Total Lines: 288
+Total Bytes: 16345
+Showing lines 1 to 288
+The following code has been modified to include a line number before every line, in the format: <line_number>: <original_line>. Please note that any changes targeting the original code should remove the line number, colon, and leading space.
+1: import { query as dbQuery } from '@/lib/db';
+2: import { Bell, MessageSquare, Plus } from 'lucide-react';
+3: import DashboardSearch from '@/components/DashboardSearch';
+4: 
+5: export default async function DashboardPage(props: { searchParams?: Promise<{ q?: string }> }) {
+6:   const customerCountRes = await dbQuery('SELECT COUNT(*) FROM "Customer"');
+7:   const transactionCountRes = await dbQuery('SELECT COUNT(*) FROM "Transaction"');
+8:   const receiptCountRes = await dbQuery('SELECT COUNT(*) FROM "Receipt"');
+9: 
+10:   const customerCount = parseInt(customerCountRes.rows[0].count, 10);
+11:   const transactionCount = parseInt(transactionCountRes.rows[0].count, 10);
+12:   const receiptCount = parseInt(receiptCountRes.rows[0].count, 10);
+13: 
+14:   const searchParams = await props.searchParams;
+15:   const q = searchParams?.q || '';
+16: 
+17:   let recentTransactions = [];
+18:   if (q) {
+19:     const res = await dbQuery(`
+20:       SELECT t.*, row_to_json(c.*) as customer 
+21:       FROM "Transaction" t 
+22:       LEFT JOIN "Customer" c ON t."customerId" = c.id 
+23:       WHERE t."itemName" ILIKE $1 OR t.type ILIKE $1 OR c.name ILIKE $1
+24:       ORDER BY t."createdAt" DESC LIMIT 10
+25:     `, [`%${q}%`]);
+26:     recentTransactions = res.rows;
+27:   } else {
+28:     const res = await dbQuery(`
+29:       SELECT t.*, row_to_json(c.*) as customer 
+30:       FROM "Transaction" t 
+31:       LEFT JOIN "Customer" c ON t."customerId" = c.id 
+32:       ORDER BY t."createdAt" DESC LIMIT 10
+33:     `);
+34:     recentTransactions = res.rows;
+35:   }
+36:   
+37:   return (
+38:     <div className="flex-1 flex overflow-y-auto">
+39:       <main className="flex-1 flex flex-col py-8 px-8 xl:px-12 w-full">
+40:         
+41:         {/* Top Navigation Bar */}
+42:         <div className="flex justify-between items-center mb-8">
+43:           <div>
+44:             <h2 className="text-gray-400 font-bold text-[17px] mb-1 tracking-wide">Hello, Admin!</h2>
+45:             <h1 className="text-[32px] sm:text-[40px] font-extrabold text-[#111] tracking-tight leading-[1.1]">
+46:               You&apos;ve got<br/>{customerCount + transactionCount + receiptCount} updates today 📝
+47:             </h1>
+48:           </div>
+49:           
+50:           <div className="hidden lg:flex items-center gap-6">
+51:             <DashboardSearch />
+52:             <div className="flex gap-4">
+53:               <button className="relative text-[#111] bg-white w-12 h-12 rounded-full shadow-sm border border-gray-100 flex items-center justify-center hover:bg-gray-50 transition">
+54:                 <Bell size={20} fill="currentColor" />
+55:                 <span className="absolute top-3 right-3 w-2.5 h-2.5 bg-[#111] rounded-full border-2 border-white"></span>
+56:               </button>
+57:               <button className="text-[#111] bg-white w-12 h-12 rounded-full shadow-sm border border-gray-100 flex items-center justify-center hover:bg-gray-50 transition">
+58:                 <MessageSquare size={20} fill="currentColor" />
+59:               </button>
+60:             </div>
+61:             <div className="flex items-center gap-3 pl-6 border-l border-gray-200">
+62:               <div className="text-right">
+63:                 <div className="font-extrabold text-[14px] text-[#111]">Admin User</div>
+64:                 <div className="text-[11px] font-bold text-gray-400">System Admin</div>
+65:               </div>
+66:               <div className="w-12 h-12 rounded-full bg-gray-200 border-2 border-white shadow-sm flex items-center justify-center font-bold text-gray-500">
+67:                 AD
+68:               </div>
+69:             </div>
+70:           </div>
+71:         </div>
+72: 
+73:         {/* Dashboard Content */}
+74:         <div className="flex flex-col gap-8 w-full max-w-7xl">
+75:           
+76:           {/* KPI Cards Grid */}
+77:           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+78:             {/* Customers Card */}
+79:             <div className="bg-white p-6 rounded-3xl shadow-[0_10px_30px_rgb(0,0,0,0.04)] border border-gray-50 flex items-center justify-between hover:-translate-y-1 transition-transform cursor-pointer">
+80:               <div>
+81:                 <p className="text-xs font-bold text-gray-400 mb-1 tracking-wide uppercase">Total Customers</p>
+82:                 <h3 className="text-[32px] font-black text-[#111] leading-none">{customerCount}</h3>
+83:               </div>
+84:               <div className="w-14 h-14 rounded-2xl bg-blue-50 text-blue-500 flex items-center justify-center">
+85:                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+86:               </div>
+87:             </div>
+88: 
+89:             {/* Transactions Card */}
+90:             <div className="bg-white p-6 rounded-3xl shadow-[0_10px_30px_rgb(0,0,0,0.04)] border border-gray-50 flex items-center justify-between hover:-translate-y-1 transition-transform cursor-pointer">
+91:               <div>
+92:                 <p className="text-xs font-bold text-gray-400 mb-1 tracking-wide uppercase">Transactions</p>
+93:                 <h3 className="text-[32px] font-black text-[#111] leading-none">{transactionCount}</h3>
+94:               </div>
+95:               <div className="w-14 h-14 rounded-2xl bg-[#FFF9E6] text-[#FFBC11] flex items-center justify-center">
+96:                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+97:               </div>
+98:             </div>
+99: 
+100:             {/* Receipts Card */}
+101:             <div className="bg-white p-6 rounded-3xl shadow-[0_10px_30px_rgb(0,0,0,0.04)] border border-gray-50 flex items-center justify-between hover:-translate-y-1 transition-transform cursor-pointer">
+102:               <div>
+103:                 <p className="text-xs font-bold text-gray-400 mb-1 tracking-wide uppercase">Receipts</p>
+104:                 <h3 className="text-[32px] font-black text-[#111] leading-none">{receiptCount}</h3>
+105:               </div>
+106:               <div className="w-14 h-14 rounded-2xl bg-purple-50 text-purple-500 flex items-center justify-center">
+107:                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+108:               </div>
+109:             </div>
+110:           </div>
+111: 
+112:           {/* Graph and Action Required Grid */}
+113:           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+114:             {/* Graph Section (Left, 2 columns) */}
+115:             <div className="lg:col-span-2 bg-white rounded-3xl shadow-[0_10px_40px_rgb(0,0,0,0.03)] border border-gray-50 p-8 w-full flex flex-col">
+116:               <div className="flex justify-between items-center mb-8">
+117:                 <div>
+118:                   <h3 className="text-[20px] font-extrabold text-[#111]">Revenue Analytics</h3>
+119:                   <p className="text-sm font-bold text-gray-400 mt-1">Monthly performance overview</p>
+120:                 </div>
+121:                 <select className="bg-gray-50 border-none text-[13px] font-bold rounded-xl px-4 py-2.5 outline-none cursor-pointer hover:bg-gray-100 transition-colors focus:ring-2 focus:ring-[#FFBC11]/50 text-gray-700">
+122:                   <option>2024</option>
+123:                   <option>2023</option>
+124:                 </select>
+125:               </div>
+126:               
+127:               {/* CSS Bar Chart */}
+128:               <div className="flex-1 min-h-[280px] w-full flex items-end gap-3 sm:gap-4 lg:gap-6 mt-4">
+129:                 {[35, 60, 45, 80, 55, 95, 100, 65, 85, 40, 70, 90].map((h, i) => (
+130:                   <div key={i} className="flex-1 flex flex-col justify-end group h-full">
+131:                     <div className="relative w-full flex justify-center h-full items-end">
+132:                       {/* Tooltip */}
+133:                       <div className="absolute -top-10 opacity-0 group-hover:opacity-100 transition-opacity bg-[#111] text-white text-[10px] font-bold py-1 px-2 rounded-lg pointer-events-none whitespace-nowrap z-10 shadow-lg">
+134:                         ₹{(h * 1200).toLocaleString()}
+135:                       </div>
+136:                       {/* Bar */}
+137:                       <div 
+138:                         className={`w-full rounded-t-xl transition-all duration-300 ${h === 100 ? 'bg-[#111]' : 'bg-[#F5F6F8] group-hover:bg-[#FFBC11]'}`} 
+139:                         style={{ height: `${h}%` }}
+140:                       ></div>
+141:                     </div>
+142:                     <div className="text-center text-[11px] text-gray-400 font-extrabold mt-3">
+143:                       {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i]}
+144:                     </div>
+145:                   </div>
+146:                 ))}
+147:               </div>
+148:             </div>
+149: 
+150:             {/* Action Required Section (Right, 1 column) */}
+151:             <div className="bg-white rounded-3xl shadow-[0_10px_40px_rgb(0,0,0,0.03)] border border-gray-50 p-8 w-full">
+152:               <div className="flex justify-between items-end mb-8">
+153:                 <div>
+154:                   <div className="text-gray-400 text-[13px] font-bold mb-1">Pending payments</div>
+155:                   <div className="text-[20px] font-extrabold text-[#111]">Action Required</div>
+156:                 </div>
+157:                 <button className="bg-[#111] text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-black transition shadow-lg shadow-black/10">
+158:                   <Plus size={18} />
+159:                 </button>
+160:               </div>
+161: 
+162:               {/* Timeline */}
+163:               <div className="relative flex-1 ml-2">
+164:                 {/* Vertical Line */}
+165:                 <div className="absolute left-[7px] top-2 bottom-0 w-[2px] bg-gray-100">
+166:                   <div className="absolute top-0 left-0 w-full h-[50%] bg-[#FFBC11]"></div>
+167:                 </div>
+168: 
+169:                 {/* Pending Payment Item */}
+170:                 <div className="relative pl-10 mb-8">
+171:                   <div className="absolute left-[2px] top-4 w-[12px] h-[12px] rounded-full bg-white border-[3px] border-[#FFBC11] z-10 shadow-sm ring-4 ring-white"></div>
+172:                   
+173:                   <div className="bg-[#FFBC11] rounded-[20px] p-5 relative shadow-xl shadow-[#FFBC11]/20">
+174:                     <div className="flex justify-between items-start mb-1">
+175:                       <h4 className="font-extrabold text-[#111] text-[14px]">Tech Corp</h4>
+176:                       <span className="text-[10px] font-bold text-[#111] mt-0.5">Overdue</span>
+177:                     </div>
+178:                     <p className="text-[12px] font-bold text-[#111]/70 mb-4">Inv #10042 - ₹45K</p>
+179:                     
+180:                     <div className="flex items-center justify-between">
+181:                       <div className="w-7 h-7 rounded-full bg-black flex items-center justify-center border-2 border-[#FFBC11] text-[10px] font-bold text-white">TC</div>
+182:                       <button className="h-7 px-3 rounded-full bg-[#111] text-white text-[10px] font-bold flex items-center justify-center shadow-lg shadow-black/20">
+183:                         Remind
+184:                       </button>
+185:                     </div>
+186:                   </div>
+187:                 </div>
+188: 
+189:                 {/* Next Item */}
+190:                 <div className="relative pl-10 mb-8">
+191:                   <div className="absolute left-[2px] top-3 w-[12px] h-[12px] rounded-full bg-white border-[3px] border-gray-200 z-10 ring-4 ring-white"></div>
+192:                   
+193:                   <div className="py-2">
+194:                     <div className="flex justify-between items-start mb-1">
+195:                       <h4 className="font-extrabold text-[#111] text-[14px]">Global Ind.</h4>
+196:                       <span className="text-[10px] font-bold text-gray-400 mt-0.5">In 2 days</span>
+197:                     </div>
+198:                     <p className="text-[12px] font-bold text-gray-400">Inv #10045 - ₹12K</p>
+199:                   </div>
+200:                 </div>
+201:                 
+202:                 {/* Third Item */}
+203:                 <div className="relative pl-10">
+204:                   <div className="absolute left-[2px] top-3 w-[12px] h-[12px] rounded-full bg-white border-[3px] border-gray-200 z-10 ring-4 ring-white"></div>
+205:                   
+206:                   <div className="py-2">
+207:                     <div className="flex justify-between items-start mb-1">
+208:                       <h4 className="font-extrabold text-[#111] text-[14px]">Apex Dynamics</h4>
+209:                       <span className="text-[10px] font-bold text-gray-400 mt-0.5">In 5 days</span>
+210:                     </div>
+211:                     <p className="text-[12px] font-bold text-gray-400">Inv #10046 - ₹8K</p>
+212:                   </div>
+213:                 </div>
+214:               </div>
+215:             </div>
+216:           </div>
+217: 
+218:           {/* Recent Transactions Table */}
+219:           <div className="bg-white rounded-3xl shadow-[0_10px_40px_rgb(0,0,0,0.03)] border border-gray-50 p-8 w-full">
+220:             <div className="flex justify-between items-center mb-6">
+221:               <div>
+222:                 <h3 className="text-[20px] font-extrabold text-[#111]">Recent Transactions</h3>
+223:                 <p className="text-sm font-bold text-gray-400 mt-1">Purchases and Sales overview</p>
+224:               </div>
+225:               <button className="text-sm font-bold text-[#FFBC11] hover:text-[#e5a810] transition-colors">
+226:                 View All
+227:               </button>
+228:             </div>
+229:             
+230:             <div className="overflow-x-auto">
+231:               <table className="w-full text-left border-collapse">
+232:                 <thead>
+233:                   <tr className="border-b border-gray-100 text-[12px] uppercase tracking-wider text-gray-400 font-bold">
+234:                     <th className="pb-4 pl-2 font-bold">Date</th>
+235:                     <th className="pb-4 font-bold">Type</th>
+236:                     <th className="pb-4 font-bold">Customer</th>
+237:                     <th className="pb-4 font-bold">Item</th>
+238:                     <th className="pb-4 text-right font-bold">Weight (Kg)</th>
+239:                     <th className="pb-4 text-right pr-2 font-bold">Pure</th>
+240:                   </tr>
+241:                 </thead>
+242:                 <tbody className="text-[14px]">
+243:                   {recentTransactions.length > 0 ? (
+244:                     recentTransactions.map((tx) => (
+245:                       <tr key={tx.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors group">
+246:                         <td className="py-4 pl-2 font-bold text-gray-500">
+247:                           {new Date(tx.date).toLocaleDateString()}
+248:                         </td>
+249:                         <td className="py-4">
+250:                           <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider ${
+251:                             tx.type === 'SALE' 
+252:                               ? 'bg-green-50 text-green-600 border border-green-100' 
+253:                               : 'bg-blue-50 text-blue-600 border border-blue-100'
+254:                           }`}>
+255:                             {tx.type}
+256:                           </span>
+257:                         </td>
+258:                         <td className="py-4 font-extrabold text-[#111]">
+259:                           {tx.customer?.name || 'Unknown'}
+260:                         </td>
+261:                         <td className="py-4 font-bold text-gray-600">
+262:                           {tx.itemName}
+263:                         </td>
+264:                         <td className="py-4 text-right font-bold text-[#111]">
+265:                           {tx.weight}
+266:                         </td>
+267:                         <td className="py-4 text-right pr-2 font-bold text-[#111]">
+268:                           {tx.pure !== null ? tx.pure : '-'}
+269:                         </td>
+270:                       </tr>
+271:                     ))
+272:                   ) : (
+273:                     <tr>
+274:                       <td colSpan={6} className="py-8 text-center text-gray-400 font-bold">
+275:                         No recent transactions found
+276:                       </td>
+277:                     </tr>
+278:                   )}
+279:                 </tbody>
+280:               </table>
+281:             </div>
+282:           </div>
+283:         </div>
+284:       </main>
+285:     </div>
+286:   );
+287: }
+288: 
+The above content shows the entire, complete file contents of the requested file.
