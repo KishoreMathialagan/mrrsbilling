@@ -25,7 +25,11 @@ export async function getSession() {
   const cookieStore = await cookies();
   const session = cookieStore.get('session')?.value;
   if (!session) return null;
-  return await decrypt(session);
+  const decoded = await decrypt(session);
+  if (decoded && decoded.username) {
+    decoded.username = decoded.username.charAt(0).toUpperCase() + decoded.username.slice(1);
+  }
+  return decoded;
 }
 
 export async function logout() {

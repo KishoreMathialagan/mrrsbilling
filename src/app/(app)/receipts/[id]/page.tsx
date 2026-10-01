@@ -61,44 +61,44 @@ export default async function ReceiptViewPage({ params }: { params: Promise<{ id
           </svg>
         </div>
 
-        <div className="p-12 relative z-10 flex flex-col min-h-full">
+        <div className="p-6 sm:p-12 relative z-10 flex flex-col min-h-full">
           
           {/* Header Section */}
-          <div className="flex justify-between items-start mb-12">
+          <div className="flex flex-col sm:flex-row justify-between items-center sm:items-start mb-8 sm:mb-12 gap-6 sm:gap-0 text-center sm:text-left">
             
             {/* Logo Area */}
             <div className="flex flex-col items-center">
-              <img src="/assets/logo.png" alt="MRS Jewellery" className="h-32 w-auto object-contain mb-2" />
-              <span className="text-[10px] font-medium text-[#B38F5F] tracking-widest mt-2">
+              <img src="/assets/logo.png" alt="MRS Jewellery" className="h-20 sm:h-32 w-auto object-contain mb-2" />
+              <span className="text-[9px] sm:text-[10px] font-medium text-[#B38F5F] tracking-widest mt-2">
                 TRUST &middot; PURITY &middot; TIMELESS BEAUTY
               </span>
             </div>
 
             {/* Right Tagline */}
-            <div className="text-right mt-6">
-              <p className="italic font-serif text-[#666] text-lg">More than Jewellery,</p>
-              <p className="italic font-serif text-[#666] text-lg border-b border-[#B38F5F] pb-1">It&apos;s a Part of Your Story</p>
+            <div className="text-center sm:text-right mt-0 sm:mt-6">
+              <p className="italic font-serif text-[#666] text-base sm:text-lg">More than Jewellery,</p>
+              <p className="italic font-serif text-[#666] text-base sm:text-lg border-b border-[#B38F5F] pb-1 inline-block sm:block">It&apos;s a Part of Your Story</p>
             </div>
           </div>
 
           {/* Contact & Receipt Info */}
           <div className="flex flex-col sm:flex-row justify-between mb-10 gap-6 sm:gap-0">
             {/* Address */}
-            <div className="space-y-4 max-w-sm">
+            <div className="space-y-4 w-full sm:max-w-sm">
               <div className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-[#B38F5F] shrink-0 mt-0.5" />
-                <div className="text-[13px] leading-relaxed text-[#444]">
+                <div className="text-[12px] sm:text-[13px] leading-relaxed text-[#444]">
                   <strong>MRS Jewellery</strong><br/>
                   123, Grand Plaza, Shop No. 4,<br/>
                   Rasipuram Road, Namakkal - 637401<br/>
                   Tamil Nadu, India
                 </div>
               </div>
-              <div className="flex items-center gap-3 text-[13px] text-[#444]">
+              <div className="flex items-center gap-3 text-[12px] sm:text-[13px] text-[#444]">
                 <Phone className="w-5 h-5 text-[#B38F5F] shrink-0" />
                 +91 98765 43210
               </div>
-              <div className="flex items-center gap-3 text-[13px] text-[#444]">
+              <div className="flex items-center gap-3 text-[12px] sm:text-[13px] text-[#444]">
                 <Mail className="w-5 h-5 text-[#B38F5F] shrink-0" />
                 care@mrs.in
               </div>
@@ -106,14 +106,14 @@ export default async function ReceiptViewPage({ params }: { params: Promise<{ id
 
             {/* Receipt Details */}
             <div className="w-full sm:w-80">
-              <h2 className="text-2xl font-bold tracking-widest text-[#333] mb-4">RECEIPT</h2>
+              <h2 className="text-xl sm:text-2xl font-bold tracking-widest text-[#333] mb-4">RECEIPT</h2>
               
-              <div className="bg-[#EBEBEB] px-4 py-2 flex justify-between items-center mb-4 text-[13px]">
+              <div className="bg-[#EBEBEB] px-4 py-2 flex justify-between items-center mb-4 text-[12px] sm:text-[13px]">
                 <span className="font-semibold text-[#555]">Receipt ID</span>
                 <span className="font-bold text-[#111]">{receipt.receiptNumber}</span>
               </div>
               
-              <div className="space-y-2 text-[13px] pl-4">
+              <div className="space-y-2 text-[12px] sm:text-[13px] pl-0 sm:pl-4">
                 <div className="grid grid-cols-[100px_10px_1fr]">
                   <span className="text-[#555]">Date</span>
                   <span>:</span>
@@ -235,7 +235,7 @@ export default async function ReceiptViewPage({ params }: { params: Promise<{ id
                 <span>TOTAL FINAL PRICE</span>
                 <span>₹ {totalFinalPrice.toFixed(2)}</span>
               </div>
-              <div className="flex justify-between items-center py-3 text-[16px] text-[#111] font-bold tracking-widest border-t border-b border-[#B38F5F]">
+              <div className="flex justify-between items-center py-3 text-[14px] sm:text-[16px] text-[#111] font-bold tracking-widest border-t border-b border-[#B38F5F]">
                 <span>GRAND TOTAL</span>
                 <span>₹ {grandTotal.toFixed(2)}</span>
               </div>
@@ -245,10 +245,10 @@ export default async function ReceiptViewPage({ params }: { params: Promise<{ id
           {/* Footer section */}
           <div className="mt-auto">
             <div className="text-center mb-10">
-              <h2 className="text-5xl text-[#B38F5F] mb-3" style={{ fontFamily: 'cursive, "Brush Script MT", "Dancing Script"' }}>Thank You!</h2>
-              <p className="text-[13px] tracking-[0.2em] font-bold text-[#555]">FOR YOUR VALUABLE TRUST</p>
+              <h2 className="text-4xl sm:text-5xl text-[#B38F5F] mb-3" style={{ fontFamily: 'cursive, "Brush Script MT", "Dancing Script"' }}>Thank You!</h2>
+              <p className="text-[11px] sm:text-[13px] tracking-[0.2em] font-bold text-[#555]">FOR YOUR VALUABLE TRUST</p>
               <div className="flex items-center justify-center gap-4 mt-6">
-                <div className="h-[1px] bg-gray-300 w-16"></div>
+                <div className="h-[1px] bg-gray-300 w-12 sm:w-16"></div>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#B38F5F" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M6 3h12l4 6-10 12L2 9l4-6z" />
                   <path d="M2 9h20" />
@@ -256,34 +256,34 @@ export default async function ReceiptViewPage({ params }: { params: Promise<{ id
                   <path d="M6 3l6 6" />
                   <path d="M18 3l-6 6" />
                 </svg>
-                <div className="h-[1px] bg-gray-300 w-16"></div>
+                <div className="h-[1px] bg-gray-300 w-12 sm:w-16"></div>
               </div>
             </div>
             
-            <div className="flex justify-center items-center gap-16 pb-4">
-              <div className="flex items-center gap-3">
-                <ShieldCheck className="w-8 h-8 text-[#B38F5F]" strokeWidth={1.5} />
-                <div className="text-[11px] text-[#555] font-medium leading-tight">
+            <div className="flex flex-wrap justify-center items-center gap-6 sm:gap-16 pb-4">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <ShieldCheck className="w-6 h-6 sm:w-8 sm:h-8 text-[#B38F5F]" strokeWidth={1.5} />
+                <div className="text-[9px] sm:text-[11px] text-[#555] font-medium leading-tight">
                   100% Hallmark<br/>Jewellery
                 </div>
               </div>
               
-              <div className="h-8 w-[1px] bg-gray-300"></div>
+              <div className="hidden sm:block h-8 w-[1px] bg-gray-300"></div>
 
-              <div className="flex items-center gap-3">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#B38F5F" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <svg width="24" height="24" className="sm:w-[32px] sm:h-[32px]" viewBox="0 0 24 24" fill="none" stroke="#B38F5F" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M6 3h12l4 6-10 12L2 9l4-6z" />
                 </svg>
-                <div className="text-[11px] text-[#555] font-medium leading-tight">
+                <div className="text-[9px] sm:text-[11px] text-[#555] font-medium leading-tight">
                   Certified<br/>Purity
                 </div>
               </div>
               
-              <div className="h-8 w-[1px] bg-gray-300"></div>
+              <div className="hidden sm:block h-8 w-[1px] bg-gray-300"></div>
 
-              <div className="flex items-center gap-3">
-                <Award className="w-8 h-8 text-[#B38F5F]" strokeWidth={1.5} />
-                <div className="text-[11px] text-[#555] font-medium leading-tight">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <Award className="w-6 h-6 sm:w-8 sm:h-8 text-[#B38F5F]" strokeWidth={1.5} />
+                <div className="text-[9px] sm:text-[11px] text-[#555] font-medium leading-tight">
                   Trusted<br/>Since 1990
                 </div>
               </div>

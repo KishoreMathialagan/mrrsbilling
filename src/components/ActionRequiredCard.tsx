@@ -74,11 +74,11 @@ export default function ActionRequiredCard({ customers, pendingPayments, receipt
   const filteredReceipts = receipts.filter(r => r.customerId === selectedCustomerId);
 
   return (
-    <div className="bg-white rounded-3xl shadow-[0_20px_40px_rgb(0,0,0,0.08)] border border-gray-50 p-8 w-full">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 sm:gap-0 mb-8">
+    <div className="bg-white rounded-3xl shadow-[0_20px_40px_rgb(0,0,0,0.08)] border border-gray-50 p-5 sm:p-6 lg:p-8 w-full">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 sm:gap-0 mb-6 sm:mb-8">
         <div>
-          <div className="text-gray-400 text-[13px] font-bold mb-1">Pending payments</div>
-          <div className="text-[20px] font-extrabold text-[#111]">Action Required</div>
+          <div className="text-gray-400 text-[11px] sm:text-[13px] font-bold mb-1">Pending payments</div>
+          <div className="text-lg sm:text-[20px] font-extrabold text-[#111]">Action Required</div>
         </div>
         <button 
           onClick={handleOpenModal}

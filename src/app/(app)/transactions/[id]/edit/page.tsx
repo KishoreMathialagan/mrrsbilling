@@ -25,6 +25,9 @@ export default async function EditTransactionPage({
   const customersRes = await dbQuery('SELECT * FROM "Customer" ORDER BY name ASC');
   const customers = customersRes.rows;
 
+  const settingsRes = await dbQuery('SELECT * FROM "Settings" WHERE id = $1', ['default']);
+  const gstRate = parseFloat(settingsRes.rows[0]?.gstRate || '18');
+
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="flex items-center space-x-4 mb-6">
@@ -41,6 +44,7 @@ export default async function EditTransactionPage({
         defaultType={transaction.type}
         initialData={transaction}
         returnTo={returnTo}
+        gstRate={gstRate}
       />
     </div>
   );

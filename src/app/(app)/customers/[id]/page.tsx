@@ -71,8 +71,8 @@ export default async function CustomerDetailPage({
                     <td className="px-4 py-3 text-gray-500 group-hover:text-black text-sm font-medium relative">
                       {index + 1}
                       <div className="absolute left-10 top-full mt-1 hidden group-hover:flex flex-col z-[100] bg-gray-300 text-black text-[11px] px-2 py-1.5 rounded shadow-sm whitespace-nowrap opacity-100">
-                        <div>Created by: {t.createdBy || 'System Admin'} at {format(new Date(t.createdAt), 'dd MMM yyyy, HH:mm')}</div>
-                        <div>Updated by: {t.updatedBy || 'System Admin'} at {format(new Date(t.updatedAt), 'dd MMM yyyy, HH:mm')}</div>
+                        <div>Created by: {t.createdBy || 'Admin'} at {format(new Date(t.createdAt), 'dd MMM yyyy, HH:mm')}</div>
+                        <div>Updated by: {t.updatedBy || 'Admin'} at {format(new Date(t.updatedAt), 'dd MMM yyyy, HH:mm')}</div>
                       </div>
                     </td>
                     <td className="px-4 py-3 text-gray-900 group-hover:text-black text-sm">{format(new Date(t.date), 'dd MMM yy')}</td>
@@ -112,7 +112,7 @@ export default async function CustomerDetailPage({
           <Link href="/customers" className="p-2 hover:bg-gray-200 rounded-full transition-colors text-gray-600 group-hover:text-black">
             <ArrowLeft className="w-5 h-5" />
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900 group-hover:text-black">Customer Details</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 group-hover:text-black">Customer Details</h1>
         </div>
       </div>
 

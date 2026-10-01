@@ -46,7 +46,7 @@ export default function FilterBar({
   }, [search, startDate, endDate, sortOrder, pathname, router]);
 
   return (
-    <div className="flex flex-col sm:flex-row gap-4 bg-white p-5 rounded-3xl shadow-[0_20px_40px_rgb(0,0,0,0.08)] border border-gray-50">
+    <div className="flex flex-col sm:flex-row gap-4 bg-white p-4 sm:p-5 rounded-3xl shadow-[0_20px_40px_rgb(0,0,0,0.08)] border border-gray-50">
       <div className="relative flex-1">
         <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
         <input 

@@ -9,14 +9,16 @@ export default function TransactionForm({
   defaultCustomerId,
   defaultType,
   initialData,
-  returnTo = '/transactions'
+  returnTo = '/transactions',
+  gstRate = 18
 }: {
   customers: { id: string, name: string, mobile: string }[],
   saveAction: (formData: FormData) => Promise<void>,
   defaultCustomerId?: string,
   defaultType?: string,
   initialData?: any,
-  returnTo?: string
+  returnTo?: string,
+  gstRate?: number
 }) {
   const [items, setItems] = useState<any[]>(initialData ? [initialData] : [{
     id: Date.now().toString(),
@@ -101,7 +103,7 @@ export default function TransactionForm({
     if (w > 0) {
       pure = w * (t + wst) / 100;
       gValue = w * mc;
-      fp = gstEnabled ? gValue * 1.18 : gValue;
+      fp = gstEnabled ? gValue * (1 + gstRate / 100) : gValue;
     }
 
     return {
@@ -275,12 +277,12 @@ export default function TransactionForm({
               className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
             />
             <label htmlFor="gstEnabled" className="text-sm font-medium text-gray-700 cursor-pointer">
-              Apply 18% GST to all items
+              Apply {gstRate}% GST to all items
             </label>
           </div>
           
           <div className="text-right bg-gray-50 px-6 py-4 rounded-xl border border-gray-200">
-            <p className="text-sm font-medium text-gray-500 mb-1">Grand Total {gstEnabled ? '(incl. 18% GST)' : '(excl. GST)'}</p>
+            <p className="text-sm font-medium text-gray-500 mb-1">Grand Total {gstEnabled ? `(incl. ${gstRate}% GST)` : '(excl. GST)'}</p>
             <p className="text-3xl font-bold text-gray-900">₹{grandTotal.toFixed(2)}</p>
           </div>
         </div>

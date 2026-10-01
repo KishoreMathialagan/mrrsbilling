@@ -30,7 +30,7 @@ export async function saveTransaction(formData: FormData) {
   const customerId = formData.get('customerId') as string || null;
   
   const session = await getSession();
-  const username = session?.username || 'System Admin';
+  const username = session?.username || 'Admin';
 
   let finalCustomerId = customerId;
 
@@ -125,7 +125,7 @@ export async function updateTransaction(id: string, formData: FormData) {
   const customerId = formData.get('customerId') as string || null;
   
   const session = await getSession();
-  const username = session?.username || 'System Admin';
+  const username = session?.username || 'Admin';
 
   let finalCustomerId = customerId;
 

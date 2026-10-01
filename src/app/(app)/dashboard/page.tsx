@@ -4,8 +4,13 @@ import DashboardSearch from '@/components/DashboardSearch';
 import DashboardAnalytics from '@/components/DashboardAnalytics';
 import DashboardBarChart from '@/components/DashboardBarChart';
 import ActionRequiredCard from '@/components/ActionRequiredCard';
+import { getSession } from '@/lib/auth';
+import { redirect } from 'next/navigation';
 
 export default async function DashboardPage(props: { searchParams?: Promise<{ q?: string, startDate?: string, endDate?: string, year?: string }> }) {
+  const session = await getSession();
+  if (!session) redirect('/login');
+  
   const customerCountRes = await dbQuery('SELECT COUNT(*) FROM "Customer"');
   const customersTodayRes = await dbQuery('SELECT COUNT(*) FROM "Customer" WHERE DATE("createdAt") = CURRENT_DATE');
 
@@ -102,11 +107,11 @@ export default async function DashboardPage(props: { searchParams?: Promise<{ q?
   return (
     <div className="flex-1 flex flex-col w-full">
       {/* Top Navigation Bar */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 mb-8">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 mb-6 sm:mb-8">
         <div>
-          <h2 className="text-gray-400 font-bold text-[17px] mb-1 tracking-wide">Hello, Admin!</h2>
-          <h1 className="text-[32px] sm:text-[40px] font-extrabold text-[#111] tracking-tight leading-[1.1]">
-            You&apos;ve got<br />{customersTodayCount} customers today 📝
+          <h2 className="text-sm sm:text-[17px] text-gray-400 font-bold mb-1 tracking-wide">Hello, {session.username}!</h2>
+          <h1 className="text-2xl sm:text-[32px] md:text-[40px] font-extrabold text-[#111] tracking-tight leading-[1.1]">
+            You&apos;ve got<br className="hidden sm:block" />{customersTodayCount} customers today 📝
           </h1>
         </div>
 
@@ -114,58 +119,58 @@ export default async function DashboardPage(props: { searchParams?: Promise<{ q?
           <DashboardSearch />
           <div className="flex items-center gap-3 pl-6 border-l border-gray-200">
             <div className="text-right">
-              <div className="font-extrabold text-[14px] text-[#111]">Admin User</div>
-              <div className="text-[11px] font-bold text-gray-400">System Admin</div>
+              <div className="font-extrabold text-[14px] text-[#111]">{session.username}</div>
+              <div className="text-[11px] font-bold text-gray-400">Admin</div>
             </div>
-            <div className="w-12 h-12 rounded-full bg-gray-200 border-2 border-white shadow-sm flex items-center justify-center font-bold text-gray-500">
-              AD
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gray-200 border-2 border-white shadow-sm flex items-center justify-center font-bold text-gray-500 text-sm sm:text-base uppercase">
+              {session.username.substring(0, 2)}
             </div>
           </div>
         </div>
       </div>
 
       {/* Dashboard Content */}
-      <div className="flex flex-col gap-8 w-full">
+      <div className="flex flex-col gap-6 sm:gap-8 w-full">
 
         {/* KPI Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="booking-card booking-card-blue flex items-center justify-between cursor-pointer hover:-translate-y-1">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
+          <div className="booking-card booking-card-blue bg-white p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-gray-50 flex flex-col sm:flex-row items-start sm:items-center justify-between hover:-translate-y-1 transition-transform cursor-pointer gap-2 sm:gap-0">
             <div>
-              <p className="text-xs font-bold text-gray-400 mb-1 tracking-wide uppercase">Total Customers</p>
-              <h3 className="text-[32px] font-black text-[#111] leading-none">{customerCount}</h3>
+              <p className="text-[10px] sm:text-xs font-bold text-gray-400 mb-1 tracking-wide uppercase">Total Customers</p>
+              <h3 className="text-xl sm:text-[32px] font-black text-[#111] leading-none">{customerCount}</h3>
             </div>
-            <div className="w-14 h-14 rounded-2xl bg-blue-50 text-blue-500 flex items-center justify-center">
-              <Users size={24} />
+            <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-blue-50 text-blue-500 flex items-center justify-center shrink-0">
+              <Users className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
           </div>
 
-          <div className="booking-card booking-card-green flex items-center justify-between cursor-pointer hover:-translate-y-1">
+          <div className="booking-card booking-card-green bg-white p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-gray-50 flex flex-col sm:flex-row items-start sm:items-center justify-between hover:-translate-y-1 transition-transform cursor-pointer gap-2 sm:gap-0">
             <div>
-              <p className="text-xs font-bold text-gray-400 mb-1 tracking-wide uppercase">Total Sales</p>
-              <h3 className="text-[28px] font-black text-[#111] leading-none">₹{totalSales.toLocaleString('en-IN')}</h3>
+              <p className="text-[10px] sm:text-xs font-bold text-gray-400 mb-1 tracking-wide uppercase">Total Sales</p>
+              <h3 className="text-lg sm:text-[28px] font-black text-[#111] leading-none">₹{totalSales.toLocaleString('en-IN')}</h3>
             </div>
-            <div className="w-14 h-14 rounded-2xl bg-green-50 text-green-500 flex items-center justify-center">
-              <IndianRupee size={24} />
+            <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-green-50 text-green-500 flex items-center justify-center shrink-0">
+              <IndianRupee className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
           </div>
 
-          <div className="booking-card booking-card-red flex items-center justify-between cursor-pointer hover:-translate-y-1">
+          <div className="booking-card booking-card-red bg-white p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-gray-50 flex flex-col sm:flex-row items-start sm:items-center justify-between hover:-translate-y-1 transition-transform cursor-pointer gap-2 sm:gap-0">
             <div>
-              <p className="text-xs font-bold text-gray-400 mb-1 tracking-wide uppercase">Total Purchase</p>
-              <h3 className="text-[28px] font-black text-[#111] leading-none">₹{totalPurchase.toLocaleString('en-IN')}</h3>
+              <p className="text-[10px] sm:text-xs font-bold text-gray-400 mb-1 tracking-wide uppercase">Total Purchase</p>
+              <h3 className="text-lg sm:text-[28px] font-black text-[#111] leading-none">₹{totalPurchase.toLocaleString('en-IN')}</h3>
             </div>
-            <div className="w-14 h-14 rounded-2xl bg-red-50 text-red-500 flex items-center justify-center">
-              <IndianRupee size={24} />
+            <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-red-50 text-red-500 flex items-center justify-center shrink-0">
+              <IndianRupee className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
           </div>
 
-          <div className="booking-card booking-card-yellow flex items-center justify-between cursor-pointer hover:-translate-y-1">
+          <div className="booking-card booking-card-yellow bg-white p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-gray-50 flex flex-col sm:flex-row items-start sm:items-center justify-between hover:-translate-y-1 transition-transform cursor-pointer gap-2 sm:gap-0">
             <div>
-              <p className="text-xs font-bold text-gray-400 mb-1 tracking-wide uppercase">Total Revenue</p>
-              <h3 className={`text-[28px] font-black leading-none ${totalRevenue < 0 ? 'text-red-500' : 'text-[#111]'}`}>₹{totalRevenue.toLocaleString('en-IN')}</h3>
+              <p className="text-[10px] sm:text-xs font-bold text-gray-400 mb-1 tracking-wide uppercase">Total Revenue</p>
+              <h3 className={`text-lg sm:text-[28px] font-black leading-none ${totalRevenue < 0 ? 'text-red-500' : 'text-[#111]'}`}>₹{totalRevenue.toLocaleString('en-IN')}</h3>
             </div>
-            <div className="w-14 h-14 rounded-2xl bg-[#FFF9E6] text-[#FFE375] flex items-center justify-center">
-              <IndianRupee size={24} />
+            <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-[#FFF9E6] text-[#FFE375] flex items-center justify-center shrink-0">
+              <IndianRupee className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
           </div>
         </div>
@@ -186,11 +191,11 @@ export default async function DashboardPage(props: { searchParams?: Promise<{ q?
         </div>
 
         {/* Recent Transactions Table */}
-        <div className="bg-white rounded-3xl shadow-[0_20px_40px_rgb(0,0,0,0.08)] border border-gray-50 p-8 w-full">
+        <div className="bg-white rounded-3xl shadow-[0_20px_40px_rgb(0,0,0,0.08)] border border-gray-50 p-5 sm:p-6 lg:p-8 w-full">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 mb-6">
             <div>
-              <h3 className="text-[20px] font-extrabold text-[#111]">Recent Transactions</h3>
-              <p className="text-sm font-bold text-gray-400 mt-1">Purchases and Sales overview</p>
+              <h3 className="text-lg sm:text-[20px] font-extrabold text-[#111]">Recent Transactions</h3>
+              <p className="text-xs sm:text-sm font-bold text-gray-400 mt-1">Purchases and Sales overview</p>
             </div>
             <button className="text-sm font-bold text-[#FFE375] hover:text-[#e5a810] transition-colors">
               View All
@@ -201,22 +206,22 @@ export default async function DashboardPage(props: { searchParams?: Promise<{ q?
             <table className="w-full text-left border-collapse whitespace-nowrap">
               <thead>
                 <tr className="border-b border-gray-100 text-[12px] uppercase tracking-wider text-gray-400 font-bold">
-                  <th className="pb-4 pl-2 font-bold">Date</th>
-                  <th className="pb-4 font-bold">Type</th>
-                  <th className="pb-4 font-bold">Customer</th>
-                  <th className="pb-4 font-bold">Item</th>
-                  <th className="pb-4 text-right font-bold">Weight (Kg)</th>
-                  <th className="pb-4 text-right pr-2 font-bold">Pure</th>
+                  <th className="px-3 sm:px-4 pb-3 sm:pb-4 font-bold">Date</th>
+                  <th className="px-3 sm:px-4 pb-3 sm:pb-4 font-bold">Type</th>
+                  <th className="px-3 sm:px-4 pb-3 sm:pb-4 font-bold">Customer</th>
+                  <th className="px-3 sm:px-4 pb-3 sm:pb-4 font-bold">Item</th>
+                  <th className="px-3 sm:px-4 pb-3 sm:pb-4 text-right font-bold">Weight (Kg)</th>
+                  <th className="px-3 sm:px-4 pb-3 sm:pb-4 text-right font-bold">Pure</th>
                 </tr>
               </thead>
               <tbody className="text-[14px]">
                 {recentTransactions.length > 0 ? (
                   recentTransactions.map((tx) => (
                     <tr key={tx.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors group">
-                      <td className="py-4 pl-2 font-bold text-gray-500">
+                      <td className="px-3 sm:px-4 py-3 sm:py-4 font-bold text-gray-500">
                         {new Date(tx.date).toLocaleDateString()}
                       </td>
-                      <td className="py-4">
+                      <td className="px-3 sm:px-4 py-3 sm:py-4">
                         <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider ${tx.type === 'SALE'
                             ? 'bg-green-50 text-green-600 border border-green-100'
                             : 'bg-blue-50 text-blue-600 border border-blue-100'
@@ -224,16 +229,16 @@ export default async function DashboardPage(props: { searchParams?: Promise<{ q?
                           {tx.type}
                         </span>
                       </td>
-                      <td className="py-4 font-extrabold text-[#111]">
+                      <td className="px-3 sm:px-4 py-3 sm:py-4 font-extrabold text-[#111]">
                         {tx.customer?.name || 'Unknown'}
                       </td>
-                      <td className="py-4 font-bold text-gray-600">
+                      <td className="px-3 sm:px-4 py-3 sm:py-4 font-bold text-gray-600">
                         {tx.itemName}
                       </td>
-                      <td className="py-4 text-right font-bold text-[#111]">
+                      <td className="px-3 sm:px-4 py-3 sm:py-4 text-right font-bold text-[#111]">
                         {tx.weight}
                       </td>
-                      <td className="py-4 text-right pr-2 font-bold text-[#111]">
+                      <td className="px-3 sm:px-4 py-3 sm:py-4 text-right font-bold text-[#111]">
                         {tx.pure !== null ? tx.pure : '-'}
                       </td>
                     </tr>

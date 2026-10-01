@@ -30,26 +30,29 @@ export default function DashboardBarChart({ monthlyData, year }: { monthlyData: 
   const maxTotal = Math.max(...dataPoints.map(Math.abs)) || 1; // avoid division by 0
 
   return (
-    <div className="bg-[#FFE375] rounded-3xl shadow-[0_20px_50px_rgb(255,227,117,0.5)] border border-[#FFE375] p-6 sm:p-8 w-full flex flex-col h-full">
-      <div className="flex flex-wrap justify-between items-center mb-8 gap-4">
+    <div className="bg-gradient-to-br from-[#FFF0B3] to-[#FFF9E6] rounded-3xl shadow-[0_20px_40px_rgb(0,0,0,0.06)] border border-[#FFF9E6] p-5 sm:p-6 lg:p-8 w-full flex flex-col h-full">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 gap-4">
         <div>
-          <h3 className="text-[18px] sm:text-[20px] font-extrabold text-[#111]">Revenue</h3>
-          <p className="text-xs sm:text-sm font-bold text-[#111]/70 mt-1">Monthly performance</p>
+          <h3 className="text-base sm:text-[18px] lg:text-[20px] font-extrabold text-[#111]">Revenue</h3>
+          <p className="text-[10px] sm:text-xs lg:text-sm font-bold text-[#111]/70 mt-1">Monthly performance</p>
         </div>
-        <select 
-          value={year}
-          onChange={handleYearChange}
-          className="bg-[#111]/10 border-none text-[12px] sm:text-[13px] font-bold rounded-xl px-3 py-2 outline-none cursor-pointer hover:bg-[#111]/20 transition-colors focus:ring-2 focus:ring-[#111]/50 text-[#111]"
-        >
-          <option value="2026">2026</option>
-          <option value="2025">2025</option>
-          <option value="2024">2024</option>
-          <option value="2023">2023</option>
-        </select>
+        <div className="w-full sm:w-auto flex justify-end">
+          <select 
+            value={year}
+            onChange={handleYearChange}
+            className="bg-[#111]/10 border-none text-[12px] sm:text-[13px] font-bold rounded-xl px-3 py-2 outline-none cursor-pointer hover:bg-[#111]/20 transition-colors focus:ring-2 focus:ring-[#111]/50 text-[#111]"
+          >
+            <option value="2026">2026</option>
+            <option value="2025">2025</option>
+            <option value="2024">2024</option>
+            <option value="2023">2023</option>
+          </select>
+        </div>
       </div>
       
       {/* CSS Bar Chart */}
-      <div className="flex-1 h-[200px] w-full flex items-end gap-1.5 sm:gap-2 lg:gap-3 mt-4">
+      <div className="w-full overflow-x-auto overflow-y-hidden pb-2 -mb-2 scrollbar-hide">
+        <div className="min-w-[320px] sm:min-w-0 flex-1 h-[200px] w-full flex items-end gap-2 lg:gap-3 mt-4">
         {dataPoints.map((val, i) => {
           const percentage = Math.max((Math.abs(val) / maxTotal) * 85, 2);
           const displayPercentage = val === 0 ? 0 : percentage;
@@ -66,7 +69,7 @@ export default function DashboardBarChart({ monthlyData, year }: { monthlyData: 
                 </div>
                 {/* Bar */}
                 <div 
-                  className={`w-full rounded-t-xl transition-all duration-300 ${val < 0 ? 'bg-red-500/80 group-hover:bg-red-500' : (isMax ? 'bg-[#111]' : 'bg-white/40 group-hover:bg-white/80')}`} 
+                  className={`w-full rounded-t-xl transition-all duration-300 ${val < 0 ? 'bg-red-500/80 group-hover:bg-red-500' : (isMax ? 'bg-[#111]' : 'bg-[#FFE375] group-hover:bg-[#FFD233]')}`} 
                   style={{ height: `${displayPercentage}%` }}
                 ></div>
               </div>
@@ -76,6 +79,7 @@ export default function DashboardBarChart({ monthlyData, year }: { monthlyData: 
             </div>
           );
         })}
+        </div>
       </div>
     </div>
   );
